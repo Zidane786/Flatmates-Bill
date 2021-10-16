@@ -19,15 +19,18 @@ class Flatmate:
         self.name = name.title()
         self.days_in_house = days_in_house
 
-    def pays(self, bill):
+    def pays(self, bill, flatmate):
         """
         :param bill:Bill class object
+        :param flatmate:Remaining Flatmate Object(i.e:-when
+               self is f1 than this is f2 object  or visa versa)
         :return: share of bill this flatmate object needs
                  to pay.
         """
         # go and see design_&_logic.txt there we explain how we got below formula
-        co_eff = self.days_in_house / total_days_both_flatmate_stay_in_house
-        return bill.amount * co_eff  # this will return bill flatmate need to pay
+        co_eff = self.days_in_house / (flatmate.days_in_house + self.days_in_house)
+        to_pay = bill.amount * co_eff  # bill flatmate need to pay
+        return to_pay
 
 
 class PdfReport:
@@ -62,9 +65,11 @@ f1 = Flatmate(name=input("Enter the name of flatmate:-"),
 f2 = Flatmate(name=input("Enter the name of flatmate:-"),
               days_in_house=int(input("Enter no.of day stayed in flat:-")))
 
-total_days_both_flatmate_stay_in_house = f1.days_in_house + f2.days_in_house
+# total_days_both_flatmate_stay_in_house = f1.days_in_house + f2.days_in_house
+# commented since we pass remaining flatmate object in pays()
+
 
 # printing bill flatmate object need to pay
 # we will pay bill 50/50 for now later we will write code for paying base on no. of day stay in flat
-print(f"{f1.name} needs to pay is:- {f1.pays(bill=the_bill):.2f}")
-print(f"{f2.name} needs to pay is :- {f2.pays(bill=the_bill):.2f}")
+print(f"{f1.name} needs to pay is:- {f1.pays(bill=the_bill, flatmate=f2):.2f}")
+print(f"{f2.name} needs to pay is :- {f2.pays(bill=the_bill, flatmate=f1):.2f}")
