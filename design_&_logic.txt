@@ -14,6 +14,24 @@ Objects:- Bill:
             name
             days_in_house
             pays():
+                logic:-
+                first we assume we will share bill base on 50 percentage (0.5) each
+                i.e:- bill = 120 than f1 pays 60 and f2 pays 60
+                than we saw carefully than what we found if we pay bill 50% (0.5)
+                than linear formula would be:-
+                f1_co_efficient * 120 + f2_co_efficient * 120 = 120
+                where:- f1_co_efficient & f2_co_efficient is 0.5
+                so base on above formula we try to find what should be the co-efficient that
+                we can share bill to pay base on no. of days stayed in house, so we got following
+                formula for finding co-efficient for each flatmate
+                f1_co_efficient = no. of days f1 stayed in flat / total no.of days both f1&f2 stayed in flat
+                f2_co_efficient = no. of days f2 stayed in flat / total no.of days both f1&f2 stayed in flat
+                amount_f1_pay = f1_co_efficient * amount
+                amount_f2_pay = f2_co_efficient * amount
+
+                we can check the amount share will be correct by putting it in following linear eq:-
+                amount_f1_pay + amount_f2_pay = amount
+
           PdfReport:
             filename
             generate(flatmate1,flatmate2,bill)
