@@ -16,7 +16,7 @@ class Flatmate:
     """
 
     def __init__(self, name, days_in_house):
-        self.name = name
+        self.name = name.title()
         self.days_in_house = days_in_house
 
     def pays(self, bill):
@@ -25,9 +25,9 @@ class Flatmate:
         :return: share of bill this flatmate object needs
                  to pay.
         """
-        # for now to see everything is working lets share bill by 50/50 ratio
-        # later we will write code for bill share base on amount of day stay in house
-        return bill.amount / 50
+        # go and see design_&_logic.txt there we explain how we got below formula
+        co_eff = self.days_in_house / total_days_both_flatmate_stay_in_house
+        return bill.amount * co_eff  # this will return bill flatmate need to pay
 
 
 class PdfReport:
@@ -53,13 +53,18 @@ class PdfReport:
 
 
 # creating Bill object
-the_bill = Bill(amount=120, period="October 2021")
+the_bill = Bill(amount=int(input("Enter Bill Amount:-")),
+                period=input("Enter Bill Period eg:August 2021:-"))
 
 # creating Flatmates object
-zidane = Flatmate(name="Zidane", days_in_house=20)
-aadil = Flatmate(name="Aadil", days_in_house=25)
+f1 = Flatmate(name=input("Enter the name of flatmate:-"),
+              days_in_house=int(input("Enter no.of day stayed in flat:-")))
+f2 = Flatmate(name=input("Enter the name of flatmate:-"),
+              days_in_house=int(input("Enter no.of day stayed in flat:-")))
+
+total_days_both_flatmate_stay_in_house = f1.days_in_house + f2.days_in_house
 
 # printing bill flatmate object need to pay
 # we will pay bill 50/50 for now later we will write code for paying base on no. of day stay in flat
-print(f"{zidane.name} needs to pay is:- {zidane.pays(bill=the_bill)}")
-print(f"{aadil.name} needs to pay is :- {aadil.pays(bill=the_bill)}")
+print(f"{f1.name} needs to pay is:- {f1.pays(bill=the_bill):.2f}")
+print(f"{f2.name} needs to pay is :- {f2.pays(bill=the_bill):.2f}")
