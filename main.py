@@ -1,4 +1,7 @@
+import webbrowser
+
 from fpdf import FPDF
+import os
 
 
 class Bill:
@@ -33,7 +36,7 @@ class Flatmate:
         # go and see design_&_logic.txt there we explain how we got below formula
         co_eff = self.days_in_house / (flatmate.days_in_house + self.days_in_house)
         to_pay = bill.amount * co_eff  # bill flatmate need to pay
-        return float(f'{to_pay:.2f}')
+        return float(f'{to_pay:.2f}')  # rounding of to_pay value so there are only 2 numbers after decimal point
 
 
 class PdfReport:
@@ -58,11 +61,13 @@ class PdfReport:
         # generating PDF stating information
         pdf = FPDF(orientation='P', unit='pt', format='A4')  # create PDF file without pages or initialize FPDF instance
         # 1 pt = 1.33 pixel
-        # adding page
+        # adding page:-
         pdf.add_page()
         # Setting Font:-
         pdf.set_font(family='arial', style='BI', size=25)
-        # adding cell
+        # adding icon
+        pdf.image(name='home.jpeg', w=30, h=30)  # we place icon with width and height 30
+        # adding Title using cell
         pdf.cell(w=0, h=80, txt="Flatmates Bill", border=0, align="C", ln=1)  # ln=1 i.e next line
         # border=1 means show rectangle(cell) border.
         # border=0 means don't show the rectangle(cell) border.
@@ -91,21 +96,25 @@ class PdfReport:
         pdf.cell(w=130, h=40, txt=flatmate2.name, border=1)
         pdf.cell(w=300, h=40, txt=f"{flatmate2.days_in_house}", border=1)
         pdf.cell(w=120, h=40, txt=f"{flatmate2.pays(bill, flatmate1)}", border=1, ln=1)
+
+        # creating pdf file
         pdf.output(self.filename)  # create PDF file with pass filename as parameter
 
+        # below line will automatically open the pdf file in web browser
+        # webbrowser.open(self.filename) for windows user windows will automatically create the path:-
+        # i.e:-file://C://User/etc.
+        # but in linux/mac we need to provide path manually so we will use below line for opening file in browser
+        webbrowser.open("file://" + os.path.realpath(self.filename))  # for mac and linux user
 
-the_bill = Bill(120, "December 2021")
-f1 = Flatmate("zidane", 20)
-f2 = Flatmate("aadil", 25)
 
 # creating user input Bill object
-# the_bill = Bill(amount=int(input("Enter Bill Amount:-")),
-#                 period=input("Enter Bill Period eg:August 2021:-"))
+the_bill = Bill(amount=int(input("Enter Bill Amount:-")),
+                period=input("Enter Bill Period eg:August 2021:-"))
 # creating user input Flatmates object
-# f1 = Flatmate(name=input("Enter the name of flatmate:-"),
-#               days_in_house=int(input("Enter no.of day stayed in flat:-")))
-# f2 = Flatmate(name=input("Enter the name of flatmate:-"),
-#               days_in_house=int(input("Enter no.of day stayed in flat:-")))
+f1 = Flatmate(name=input("Enter the name of flatmate:-"),
+              days_in_house=int(input("Enter no.of day stayed in flat:-")))
+f2 = Flatmate(name=input("Enter the name of flatmate:-"),
+              days_in_house=int(input("Enter no.of day stayed in flat:-")))
 
 # total_days_both_flatmate_stay_in_house = f1.days_in_house + f2.days_in_house
 # commented since we pass remaining flatmate object in pays()
