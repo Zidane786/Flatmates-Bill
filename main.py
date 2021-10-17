@@ -1,3 +1,6 @@
+from fpdf import FPDF
+
+
 class Bill:
     """
     Object that contain total bill amount and the period of
@@ -30,7 +33,7 @@ class Flatmate:
         # go and see design_&_logic.txt there we explain how we got below formula
         co_eff = self.days_in_house / (flatmate.days_in_house + self.days_in_house)
         to_pay = bill.amount * co_eff  # bill flatmate need to pay
-        return to_pay
+        return float(f'{to_pay:.2f}')
 
 
 class PdfReport:
@@ -52,18 +55,56 @@ class PdfReport:
         :param bill: Bill class object (bill)
         :return: generate PDF file for Flatmate Bill Report.
         """
-        pass
+        pdf = FPDF(orientation='P', unit='pt', format='A4')  # create PDF file without pages or initialize FPDF instance
+        # 1 pt = 1.33 pixel
+        # adding page
+        pdf.add_page()
+        # Setting Font:-
+        pdf.set_font(family='arial', style='BI', size=25)
+        # adding cell
+        pdf.cell(w=0, h=80, txt="Flatmates Bill", border=0, align="C", ln=1)  # ln=1 i.e next line
+        # border=1 means show rectangle(cell) border.
+        # border=0 means don't show the rectangle(cell) border.
+        # insert period label and value
+        pdf.cell(w=100, h=40, txt="Period:-", border=0)
+        pdf.cell(w=200, h=40, txt=bill.period, border=0, ln=1)
+
+        # insert total bill amount label and value
+        pdf.cell(w=230, h=40, txt="Total Bill Amount:-", border=0)
+        pdf.cell(w=100, h=40, txt=f'{bill.amount}', border=0, ln=1)  # go to next line
+
+        # creating table having column with fields name,no. of day stays,amount to pay
+        pdf.cell(w=20, ln=1)  # go to next line
+        pdf.cell(w=130, h=40, txt='Name', border=1)
+        pdf.cell(w=300, h=40, txt='Days stay in Flat', border=1)
+        pdf.cell(w=120, h=40, txt='Amount', border=1, ln=1)  # next line
+        # changing font
+        pdf.set_font('arial', 'I', 20)
+
+        # adding flatmate1 info in row 1:-
+        pdf.cell(w=130, h=40, txt=flatmate1.name, border=1)
+        pdf.cell(w=300, h=40, txt=f"{flatmate1.days_in_house}", border=1)
+        pdf.cell(w=120, h=40, txt=f"{flatmate1.pays(bill, flatmate2)}", border=1, ln=1)
+
+        # adding flatmate2 info in row 2:-
+        pdf.cell(w=130, h=40, txt=flatmate2.name, border=1)
+        pdf.cell(w=300, h=40, txt=f"{flatmate2.days_in_house}", border=1)
+        pdf.cell(w=120, h=40, txt=f"{flatmate2.pays(bill, flatmate1)}", border=1, ln=1)
+        pdf.output(self.filename)  # create PDF file with pass filename as parameter
 
 
-# creating Bill object
-the_bill = Bill(amount=int(input("Enter Bill Amount:-")),
-                period=input("Enter Bill Period eg:August 2021:-"))
+the_bill = Bill(120, "December 2021")
+f1 = Flatmate("zidane", 20)
+f2 = Flatmate("aadil", 25)
 
-# creating Flatmates object
-f1 = Flatmate(name=input("Enter the name of flatmate:-"),
-              days_in_house=int(input("Enter no.of day stayed in flat:-")))
-f2 = Flatmate(name=input("Enter the name of flatmate:-"),
-              days_in_house=int(input("Enter no.of day stayed in flat:-")))
+# creating user input Bill object
+# the_bill = Bill(amount=int(input("Enter Bill Amount:-")),
+#                 period=input("Enter Bill Period eg:August 2021:-"))
+# creating user input Flatmates object
+# f1 = Flatmate(name=input("Enter the name of flatmate:-"),
+#               days_in_house=int(input("Enter no.of day stayed in flat:-")))
+# f2 = Flatmate(name=input("Enter the name of flatmate:-"),
+#               days_in_house=int(input("Enter no.of day stayed in flat:-")))
 
 # total_days_both_flatmate_stay_in_house = f1.days_in_house + f2.days_in_house
 # commented since we pass remaining flatmate object in pays()
@@ -71,5 +112,9 @@ f2 = Flatmate(name=input("Enter the name of flatmate:-"),
 
 # printing bill flatmate object need to pay
 # we will pay bill 50/50 for now later we will write code for paying base on no. of day stay in flat
-print(f"{f1.name} needs to pay is:- {f1.pays(bill=the_bill, flatmate=f2):.2f}")
-print(f"{f2.name} needs to pay is :- {f2.pays(bill=the_bill, flatmate=f1):.2f}")
+print(f"{f1.name} needs to pay is:- {f1.pays(bill=the_bill, flatmate=f2)}")
+print(f"{f2.name} needs to pay is :- {f2.pays(bill=the_bill, flatmate=f1)}")
+
+# PdfReport object
+pdf_report = PdfReport('flatmates_bill.pdf')
+pdf_report.generate(flatmate1=f1, flatmate2=f2, bill=the_bill)
