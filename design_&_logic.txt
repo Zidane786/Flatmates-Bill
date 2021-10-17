@@ -6,7 +6,7 @@ Description:-An App that get as input the amount of a bill for particular period
              It also generates a PDF file stating the total Bill, the names of flatmate,the
              period, and how much each of flatmate has to pay
 
-Initial Design:-
+Design:-
 Objects:- Bill:
             amount
             period
@@ -36,4 +36,4 @@ Objects:- Bill:
             filename
             generate(flatmate1,flatmate2,bill):
                 we created pdf file using fpdf module
-
+                use webbrowser module for automatically opening pdf file in browser
