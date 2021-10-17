@@ -55,6 +55,7 @@ class PdfReport:
         :param bill: Bill class object (bill)
         :return: generate PDF file for Flatmate Bill Report.
         """
+        # generating PDF stating information
         pdf = FPDF(orientation='P', unit='pt', format='A4')  # create PDF file without pages or initialize FPDF instance
         # 1 pt = 1.33 pixel
         # adding page
