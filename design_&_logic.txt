@@ -34,5 +34,6 @@ Objects:- Bill:
 
           PdfReport:
             filename
-            generate(flatmate1,flatmate2,bill)
+            generate(flatmate1,flatmate2,bill):
+                we created pdf file using fpdf module
 
